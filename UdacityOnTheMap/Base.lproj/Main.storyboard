@@ -13,7 +13,7 @@
         <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="loginViewController" id="BYZ-38-t0r" customClass="LoginViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -65,8 +65,8 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
-                        <outlet property="PasswordTextField" destination="aVv-nX-w8f" id="CGy-P8-RzW"/>
                         <outlet property="emailTextField" destination="1gA-xa-y83" id="R6V-9D-0T3"/>
+                        <outlet property="passwordTextField" destination="aVv-nX-w8f" id="yQf-qr-s1C"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -76,7 +76,7 @@
         <!--Post Info View Controller-->
         <scene sceneID="Pe6-Dy-vDh">
             <objects>
-                <viewController id="b38-Vk-dye" customClass="PostInfoViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="postInfoViewController" id="b38-Vk-dye" customClass="PostInfoViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hde-PA-dlC"/>
                         <viewControllerLayoutGuide type="bottom" id="Rel-JH-H5s"/>
@@ -94,13 +94,13 @@
         <!--List-->
         <scene sceneID="xcu-tr-t7W">
             <objects>
-                <tableViewController id="Ak8-Wu-YdS" customClass="ListTableViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="listTableViewController" id="Ak8-Wu-YdS" customClass="ListTableViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="2Gj-hC-rAj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="dIy-z6-YAf">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="reuseIdentifier" id="dIy-z6-YAf">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dIy-z6-YAf" id="sEf-TH-604">
@@ -123,7 +123,7 @@
         <!--Map-->
         <scene sceneID="kon-X4-Wbv">
             <objects>
-                <viewController id="BwE-aV-y9L" customClass="MapViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mapViewController" id="BwE-aV-y9L" customClass="MapViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="m68-w1-eB0"/>
                         <viewControllerLayoutGuide type="bottom" id="WEB-JY-mJK"/>
@@ -158,11 +158,19 @@
         <!--On The Map-->
         <scene sceneID="bWw-N0-Rk5">
             <objects>
-                <tabBarController id="d40-Rq-t0D" sceneMemberID="viewController">
+                <tabBarController id="d40-Rq-t0D" customClass="OnTheMapViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="On The Map" id="v2V-it-2YE">
                         <rightBarButtonItems>
-                            <barButtonItem title="Refresh" id="sjX-e4-sQN"/>
-                            <barButtonItem title="PostMe" id="kFt-Of-x0L"/>
+                            <barButtonItem title="Refresh" id="sjX-e4-sQN">
+                                <connections>
+                                    <action selector="refresh:" destination="d40-Rq-t0D" id="p3i-Tx-S2c"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="PostMe" id="kFt-Of-x0L">
+                                <connections>
+                                    <action selector="postInfo:" destination="d40-Rq-t0D" id="vjn-8P-DQW"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Dgs-Qh-h9K">
