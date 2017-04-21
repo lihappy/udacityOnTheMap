@@ -69,10 +69,8 @@
 			isa = PBXGroup;
 			children = (
 				513842E41EA85AF300989B7A /* AppDelegate.swift */,
-				513843031EA9A75000989B7A /* StudentInformation.swift */,
-				513843051EA9B3E400989B7A /* SIConstants.swift */,
-				513843071EA9B5AA00989B7A /* SIClient.swift */,
-				513843021EA9A6D500989B7A /* controller */,
+				513843E41EA9F90700989B7A /* Model */,
+				513843021EA9A6D500989B7A /* Controller */,
 				513842E81EA85AF300989B7A /* Main.storyboard */,
 				513842EB1EA85AF300989B7A /* Assets.xcassets */,
 				513842ED1EA85AF300989B7A /* LaunchScreen.storyboard */,
@@ -81,7 +79,7 @@
 			path = UdacityOnTheMap;
 			sourceTree = "<group>";
 		};
-		513843021EA9A6D500989B7A /* controller */ = {
+		513843021EA9A6D500989B7A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				513842F61EA85E2200989B7A /* LoginViewController.swift */,
@@ -90,7 +88,17 @@
 				513842FE1EA8850400989B7A /* ListTableViewController.swift */,
 				513843001EA8909400989B7A /* OnTheMapViewController.swift */,
 			);
-			name = controller;
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		513843E41EA9F90700989B7A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				513843031EA9A75000989B7A /* StudentInformation.swift */,
+				513843051EA9B3E400989B7A /* SIConstants.swift */,
+				513843071EA9B5AA00989B7A /* SIClient.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,7 +248,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -283,7 +291,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -336,6 +344,7 @@
 				513842F51EA85AF300989B7A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

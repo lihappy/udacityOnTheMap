@@ -10,16 +10,14 @@ import UIKit
 
 class ListTableViewController: UITableViewController {
     
+//    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+    
     var students = [StudentInformation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -27,6 +25,7 @@ class ListTableViewController: UITableViewController {
         
         students = SIClient.sharedInstance().studentArray
         self.tableView.reloadData()
+        
     }
 
     // MARK: - Table view data source
@@ -45,9 +44,15 @@ class ListTableViewController: UITableViewController {
 
         // Configure the cell...
         let student = students[indexPath.row]
+        cell.imageView?.image = UIImage.init(named: "icon_pin")
         cell.textLabel?.text = "\(student.firstName) \(student.lastName)"
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let student = students[indexPath.row]
+        openUserUrl(student.mediaURL!)
     }
     
 

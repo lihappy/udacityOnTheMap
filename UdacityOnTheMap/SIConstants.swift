@@ -6,6 +6,8 @@
 //  Copyright © 2017 Amazon. All rights reserved.
 //
 
+import UIKit
+
 extension SIClient {
     
     // MARK: Constants
@@ -19,6 +21,10 @@ extension SIClient {
         static let ApiScheme = "https"
         static let ParseApiHost = "parse.udacity.com"
         static let StudentListApiPath = "/parse/classes/StudentLocation"
+        
+        static let ApplicationJson = "application/json"
+        static let Accept = "Accept"
+        static let ContentType = "Content-Type"
         
         static let AuthorizationURL = "https://www.udacity.com/api/session"
     }
@@ -54,6 +60,12 @@ extension SIClient {
     struct ParametersKey {
         static let ParseAppIdKey: String = "X-Parse-Application-Id"
         static let ParseApiKey: String = "X-Parse-REST-API-Key"
+        
+    }
+    
+    struct Colors {
+        static let BlueColor = UIColor.init(red: 81.0/255, green: 137.0/255, blue: 180.0/255, alpha: 1.0)
+        static let GrayColor = UIColor.init(red: 224.0/255, green: 224.0/255, blue: 221.0/255, alpha: 1.0)
         
     }
     
