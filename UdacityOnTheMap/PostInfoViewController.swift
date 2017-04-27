@@ -17,7 +17,7 @@ class PostInfoViewController: LHBViewController {
     var latitude: Double?
     var mapString: String?
     
-    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+//    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
 
     @IBOutlet weak var topTextView: UITextView!
@@ -38,7 +38,7 @@ class PostInfoViewController: LHBViewController {
     
     func defaultUI() {
         
-        self.activityIndicator.hidesWhenStopped = true        
+//        self.activityIndicator.hidesWhenStopped = true        
         
         self.topTextView.delegate = self
         self.bottomTextView.delegate = self
@@ -89,8 +89,8 @@ class PostInfoViewController: LHBViewController {
         }
         
         // find on the map
-        self.view.addSubview(self.activityIndicator)
-        self.view.bringSubview(toFront: self.activityIndicator)
+//        self.view.addSubview(self.activityIndicator)
+//        self.view.bringSubview(toFront: self.activityIndicator)
         self.activityIndicator.startAnimating();
         
         let localSearchRequest = MKLocalSearchRequest()
@@ -147,6 +147,8 @@ class PostInfoViewController: LHBViewController {
     }
     
     @IBAction func submit(_ sender: Any) {
+        self.activityIndicator.startAnimating()
+        
         // Check mapString
         if (self.topTextView.text == nil || self.topTextView.text == ""){
             showSimpleErrorAlert(_message: "Please enter your link", _sender: self)
@@ -206,6 +208,11 @@ class PostInfoViewController: LHBViewController {
         request.httpBody = body.data(using: String.Encoding.utf8)
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
+            
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+            }
+            
             if (error != nil || data == nil) { // Handle error…
                 showSimpleErrorAlert(_message: "Post Info failed", _sender: self)
             }

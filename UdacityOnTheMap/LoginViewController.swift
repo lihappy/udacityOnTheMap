@@ -9,7 +9,7 @@
 import UIKit
 
 class LoginViewController: LHBViewController {
-    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+//    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
     @IBOutlet weak var LoginButton: UIButton!
     @IBOutlet weak var emailTextField: UITextField!
@@ -19,7 +19,7 @@ class LoginViewController: LHBViewController {
         super.viewDidLoad()
         
         
-        self.activityIndicator.hidesWhenStopped = true
+//        self.activityIndicator.hidesWhenStopped = true
         
         self.emailTextField.delegate = self
         self.passwordTextField.delegate = self
@@ -32,9 +32,9 @@ class LoginViewController: LHBViewController {
             return
         }
         
-        self.activityIndicator.center = self.view.center
-        self.view.addSubview(self.activityIndicator)
-        self.view.bringSubview(toFront: self.activityIndicator)
+//        self.activityIndicator.center = self.view.center
+//        self.view.addSubview(self.activityIndicator)
+//        self.view.bringSubview(toFront: self.activityIndicator)
         self.activityIndicator.startAnimating()
         
 //        let url = URL(string: "https://www.udacity.com/api/session")

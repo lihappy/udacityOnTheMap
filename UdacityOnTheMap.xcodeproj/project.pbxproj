@@ -84,8 +84,8 @@
 		513843021EA9A6D500989B7A /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				513842F61EA85E2200989B7A /* LoginViewController.swift */,
 				513F50D01EB1C7E10049C804 /* LHBViewController.swift */,
+				513842F61EA85E2200989B7A /* LoginViewController.swift */,
 				513842F81EA85E5C00989B7A /* PostInfoViewController.swift */,
 				513842FA1EA8849A00989B7A /* MapViewController.swift */,
 				513842FE1EA8850400989B7A /* ListTableViewController.swift */,

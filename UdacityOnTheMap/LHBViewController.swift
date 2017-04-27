@@ -9,12 +9,18 @@
 import UIKit
 
 class LHBViewController: UIViewController {
-
+    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LHBViewController.dismissKeyboard))
         self.view.addGestureRecognizer(tap)
+        
+        self.activityIndicator.center = self.view.center
+        self.activityIndicator.hidesWhenStopped = true
+        self.view.addSubview(self.activityIndicator)
+        self.view .bringSubview(toFront: self.activityIndicator)
     }
 
     func dismissKeyboard() {
