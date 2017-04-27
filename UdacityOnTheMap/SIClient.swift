@@ -15,6 +15,18 @@ class SIClient: NSObject {
     
     // Shared student list
     var studentArray = [StudentInformation]()
+//        {
+//        didSet {
+//            
+//            let storyBoard: UIStoryboard = UIStoryboard.init(name: "Main", bundle: nil)
+//            
+//            let listTableVC = storyBoard.instantiateViewController(withIdentifier: "listTableViewController") as! ListTableViewController
+//            listTableVC.tableView.reloadData()
+//
+//            let mapVC = storyBoard.instantiateViewController(withIdentifier: "mapViewController") as! MapViewController
+//            mapVC.updateAnnotations()
+//        }
+//    }
     
 //    // Current user
 //    var student = StudentInformation()?
@@ -193,18 +205,18 @@ class SIClient: NSObject {
             completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
         
-//        print(parsedResult);
-        
         completionHandlerForConvertData(parsedResult, nil)
     }
     
 }
 
 func showSimpleErrorAlert(_message: String, _sender: AnyObject) {
-    let alertController = UIAlertController.init(title: "Error", message: _message, preferredStyle: UIAlertControllerStyle.alert)
-    let alertAction = UIAlertAction.init(title: "OK", style: UIAlertActionStyle.default, handler: nil)
-    alertController.addAction(alertAction);
-    _sender.present(alertController, animated: true, completion: nil);
+    DispatchQueue.main.async {
+        let alertController = UIAlertController.init(title: "Error", message: _message, preferredStyle: UIAlertControllerStyle.alert)
+        let alertAction = UIAlertAction.init(title: "OK", style: UIAlertActionStyle.default, handler: nil)
+        alertController.addAction(alertAction);
+        _sender.present(alertController, animated: true, completion: nil);
+    }
 }
 
 func openUrlWithSafari(_ urlString: String) {

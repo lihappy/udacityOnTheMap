@@ -9,7 +9,8 @@
 import UIKit
 
 class OnTheMapViewController: UITabBarController {
-
+    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -17,21 +18,17 @@ class OnTheMapViewController: UITabBarController {
         let loginViewController = self.storyboard?.instantiateViewController(withIdentifier: "loginViewController") as! LoginViewController
         self.navigationController?.present(loginViewController, animated: false, completion: nil);
         
+        self.activityIndicator.center = self.view.center
+        self.view.addSubview(self.activityIndicator)
+        self.view.bringSubview(toFront: self.activityIndicator)
+        
         // Load data
         self.requestStudentsInfo()
-//        self.requestUserInfo()
         
     }
     
     @IBAction func refresh(_ sender: Any) {
         self.requestStudentsInfo()
-//        self.updateData()
-        
-//        let listTableVC = self.storyboard?.instantiateViewController(withIdentifier: "listTableViewController") as! ListTableViewController
-//        listTableVC.tableView.reloadData()
-//        
-//        let mapVC = self.storyboard?.instantiateViewController(withIdentifier: "mapViewController") as! MapViewController
-//        mapVC.updateAnnotations()
     }
 
     @IBAction func postInfo(_ sender: Any) {
@@ -40,6 +37,8 @@ class OnTheMapViewController: UITabBarController {
     }
     
     func requestStudentsInfo() {
+        self.activityIndicator.startAnimating()
+        
         let parameters: NSMutableDictionary = NSMutableDictionary()
         parameters.setObject(SIClient.Constants.ParseApplicationID, forKey: SIClient.ParametersKey.ParseAppIdKey as NSCopying)
         parameters.setObject(SIClient.Constants.ParseApplicationKey, forKey: SIClient.ParametersKey.ParseApiKey as NSCopying)
@@ -50,20 +49,29 @@ class OnTheMapViewController: UITabBarController {
         
         SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: parameters, jsonBody: "", needConvertData: true) { (result, error) in
             if (result != nil) {
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
+                
                 self.saveStudentsInfo(result!)
+                self.updateData()
             }
-//            self.updateData()
-            
         }
     }
     
-//    func updateData() {
-//        let listTableVC = self.storyboard?.instantiateViewController(withIdentifier: "listTableViewController") as! ListTableViewController
-//        listTableVC.tableView.reloadData()
-//        
-//        let mapVC = self.storyboard?.instantiateViewController(withIdentifier: "mapViewController") as! MapViewController
-//        mapVC.updateAnnotations()
-//    }
+    func updateData() {
+        let rootVC = self.navigationController?.viewControllers.first as! OnTheMapViewController
+        
+        let viewControllers: [UIViewController] = (rootVC.viewControllers)!
+        if (viewControllers != nil && viewControllers.count >= 2) {
+            let listVC = viewControllers[1] as! ListTableViewController
+            listVC.tableView.reloadData()
+            
+            let mapVC = viewControllers[0] as! MapViewController
+            mapVC.updateAnnotations()
+            
+        }
+    }
     
 //    func requestUserInfo() {
 //        let userId: String = SIClient.sharedInstance().userId!

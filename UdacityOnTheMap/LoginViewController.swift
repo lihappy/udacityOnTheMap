@@ -9,7 +9,6 @@
 import UIKit
 
 class LoginViewController: LHBViewController {
-//    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
     @IBOutlet weak var LoginButton: UIButton!
     @IBOutlet weak var emailTextField: UITextField!
@@ -117,27 +116,22 @@ class LoginViewController: LHBViewController {
             }
             
             let status = parsedResult["status"] as? String
-            if ( status == "400" ) {
-                let errorMessage = parsedResult["error"] as? String
-                showSimpleErrorAlert(_message: "Login Failed. \(errorMessage)", _sender: self);
+            if ( status != nil && status != "200" ) {
+                var errorMessage = parsedResult["error"] as? String
+                errorMessage = errorMessage == nil ? "" : errorMessage!
+                showSimpleErrorAlert(_message: "Login Failed. " + errorMessage!, _sender: self)
                 return
             }
             
             //sucess
-            let session = parsedResult["session"] as? [String:AnyObject]
-            let sessionId = session?["id"] as? String
-//            if (!(sessionId?.isEmpty)!) {
-//                self.dismiss(animated: true, completion: nil)
-//            }
             let account = parsedResult["account"] as? [String:AnyObject]
             let userId = account?["key"] as? String
 
-            
             if (!(userId?.isEmpty)!) {
                 SIClient.sharedInstance().userId = userId
-                let navigationVC = self.storyboard?.instantiateViewController(withIdentifier: "navigationViewController")
-//                self.present(navigationVC!, animated: true, completion: nil)
                 self.dismiss(animated: true, completion: nil)
+            } else {
+                showSimpleErrorAlert(_message: "Login failed. Please try again.", _sender: self)
             }
         }
         task.resume()

@@ -12,26 +12,19 @@ import MapKit
 
 class MapViewController: UIViewController {
 
-//    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-    
     @IBOutlet weak var mapView: MKMapView!
-    
     
     var students = [StudentInformation]()
     var annotations = [MKPointAnnotation]()
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         self.students = SIClient.sharedInstance().studentArray
         self.annotations = self.generateAnnotationsFromStudents(self.students)
         
-        self.mapView.addAnnotations(self.annotations)        
+        self.mapView.addAnnotations(self.annotations)
+        
     }
     
     func updateAnnotations() {
@@ -39,7 +32,8 @@ class MapViewController: UIViewController {
             self.mapView.removeAnnotations(self.annotations)
         }
         
-        self.annotations = self.generateAnnotationsFromStudents(SIClient.sharedInstance().studentArray)
+        self.students = SIClient.sharedInstance().studentArray
+        self.annotations = self.generateAnnotationsFromStudents(self.students)
         self.mapView.addAnnotations(self.annotations)
     }
 

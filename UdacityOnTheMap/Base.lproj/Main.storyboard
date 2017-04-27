@@ -311,7 +311,7 @@
         <!--On The Map-->
         <scene sceneID="bWw-N0-Rk5">
             <objects>
-                <tabBarController id="d40-Rq-t0D" customClass="OnTheMapViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="rootVC" id="d40-Rq-t0D" customClass="OnTheMapViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="On The Map" id="v2V-it-2YE">
                         <rightBarButtonItems>
                             <barButtonItem image="icon_refresh" id="sjX-e4-sQN">

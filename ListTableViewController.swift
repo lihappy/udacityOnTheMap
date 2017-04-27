@@ -10,22 +10,14 @@ import UIKit
 
 class ListTableViewController: UITableViewController {
     
-//    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-    
     var students = [StudentInformation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         students = SIClient.sharedInstance().studentArray
         self.tableView.reloadData()
-        
+
     }
 
     // MARK: - Table view data source
