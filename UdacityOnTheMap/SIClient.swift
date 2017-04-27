@@ -207,7 +207,8 @@ func showSimpleErrorAlert(_message: String, _sender: AnyObject) {
     _sender.present(alertController, animated: true, completion: nil);
 }
 
-func openUserUrl(_ urlString: String) {
+func openUrlWithSafari(_ urlString: String) {
     let url = URL.init(string: urlString)
     UIApplication.shared.openURL(url!)    
 }
+

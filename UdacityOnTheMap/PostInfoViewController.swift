@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class PostInfoViewController: UIViewController {
+class PostInfoViewController: LHBViewController {
     
     var pointAnnotation = MKPointAnnotation()
     var mediaUrl: String?
@@ -38,12 +38,7 @@ class PostInfoViewController: UIViewController {
     
     func defaultUI() {
         
-        self.activityIndicator.hidesWhenStopped = true
-        
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
-        self.view.addGestureRecognizer(tap)
-        
-        
+        self.activityIndicator.hidesWhenStopped = true        
         
         self.topTextView.delegate = self
         self.bottomTextView.delegate = self
@@ -84,10 +79,7 @@ class PostInfoViewController: UIViewController {
         self.submitButton.isHidden = true
     }
     
-    func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        self.view.endEditing(true)
-    }
+
     
     @IBAction func findOnTheMap(_ sender: Any) {
         // Check mapString

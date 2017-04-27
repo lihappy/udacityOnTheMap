@@ -8,17 +8,21 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: LHBViewController {
     let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
     
+    @IBOutlet weak var LoginButton: UIButton!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        
         self.activityIndicator.hidesWhenStopped = true
+        
+        self.emailTextField.delegate = self
+        self.passwordTextField.delegate = self
     }
     
     @IBAction func login(_ sender: Any) {
@@ -142,12 +146,18 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func signUp(_ sender: Any) {
+        openUrlWithSafari(SIClient.Constants.signUpURL)
     }
     
-    
-    
+   
+}
 
-
+extension LoginViewController: UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+    }
+    
 }
 
 

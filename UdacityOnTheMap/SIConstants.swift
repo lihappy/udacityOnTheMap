@@ -27,6 +27,7 @@ extension SIClient {
         static let ContentType = "Content-Type"
         
         static let AuthorizationURL = "https://www.udacity.com/api/session"
+        static let signUpURL = "https://www.udacity.com"
     }
     
     // MARK: JSON Response Keys
@@ -66,6 +67,7 @@ extension SIClient {
     struct Colors {
         static let BlueColor = UIColor.init(red: 81.0/255, green: 137.0/255, blue: 180.0/255, alpha: 1.0)
         static let GrayColor = UIColor.init(red: 224.0/255, green: 224.0/255, blue: 221.0/255, alpha: 1.0)
+        static let LogoBlueColor = UIColor.init(red: 2.0/255, green: 179.0/255, blue: 228.0/255, alpha: 1.0)
         
     }
     
