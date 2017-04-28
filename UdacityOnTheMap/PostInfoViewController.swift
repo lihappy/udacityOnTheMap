@@ -17,9 +17,6 @@ class PostInfoViewController: LHBViewController {
     var latitude: Double?
     var mapString: String?
     
-//    let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-    
-
     @IBOutlet weak var topTextView: UITextView!
     @IBOutlet weak var bottomTextView: UITextView!
     @IBOutlet weak var mapView: MKMapView!
@@ -37,8 +34,6 @@ class PostInfoViewController: LHBViewController {
     }
     
     func defaultUI() {
-        
-//        self.activityIndicator.hidesWhenStopped = true        
         
         self.topTextView.delegate = self
         self.bottomTextView.delegate = self
@@ -89,8 +84,6 @@ class PostInfoViewController: LHBViewController {
         }
         
         // find on the map
-//        self.view.addSubview(self.activityIndicator)
-//        self.view.bringSubview(toFront: self.activityIndicator)
         self.activityIndicator.startAnimating();
         
         let localSearchRequest = MKLocalSearchRequest()
@@ -178,7 +171,7 @@ class PostInfoViewController: LHBViewController {
         
         let body = "{\"uniqueKey\": \"\(SIClient.sharedInstance().userId! as String)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(self.mapString! as String)\", \"mediaURL\": \"\(self.mediaUrl! as String)\",\"latitude\": \(self.latitude! as Double), \"longitude\": \(self.longtitute! as Double)}"
         
-        var urlString: String = "https://parse.udacity.com/parse/classes/StudentLocation"
+        var urlString: String = SIClient.Constants.StudentsLocationURL
         var method: String = "POST"
         
         var objectId: String = ""

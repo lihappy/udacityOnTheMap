@@ -45,7 +45,7 @@ class OnTheMapViewController: UITabBarController {
         parameters.setObject("100", forKey: "limit" as NSCopying)
         parameters.setObject("-updatedAt", forKey: "order" as NSCopying)
         
-        let url = URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!
+        let url = URL(string: SIClient.Constants.StudentsLocationURL)!
         
         SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: parameters, jsonBody: "", needConvertData: true) { (result, error) in
             if (result != nil) {

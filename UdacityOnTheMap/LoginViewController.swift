@@ -83,7 +83,7 @@ class LoginViewController: LHBViewController {
 //
 //        }
         
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
+        let request = NSMutableURLRequest(url: URL(string: SIClient.Constants.AuthorizationURL)!)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -115,8 +115,8 @@ class LoginViewController: LHBViewController {
                 return
             }
             
-            let status = parsedResult["status"] as? String
-            if ( status != nil && status != "200" ) {
+            let status = parsedResult["status"] as? Int
+            if ( status != nil && status != 200 ) {
                 var errorMessage = parsedResult["error"] as? String
                 errorMessage = errorMessage == nil ? "" : errorMessage!
                 showSimpleErrorAlert(_message: "Login Failed. " + errorMessage!, _sender: self)
@@ -140,7 +140,7 @@ class LoginViewController: LHBViewController {
     }
     
     @IBAction func signUp(_ sender: Any) {
-        openUrlWithSafari(SIClient.Constants.signUpURL)
+        openUrlWithSafari(SIClient.Constants.SignUpURL)
     }
     
    

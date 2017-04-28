@@ -15,23 +15,7 @@ class SIClient: NSObject {
     
     // Shared student list
     var studentArray = [StudentInformation]()
-//        {
-//        didSet {
-//            
-//            let storyBoard: UIStoryboard = UIStoryboard.init(name: "Main", bundle: nil)
-//            
-//            let listTableVC = storyBoard.instantiateViewController(withIdentifier: "listTableViewController") as! ListTableViewController
-//            listTableVC.tableView.reloadData()
-//
-//            let mapVC = storyBoard.instantiateViewController(withIdentifier: "mapViewController") as! MapViewController
-//            mapVC.updateAnnotations()
-//        }
-//    }
-    
-//    // Current user
-//    var student = StudentInformation()?
-    
-    
+
     // Shared use id
     var userId: String? {
         didSet {
@@ -56,15 +40,6 @@ class SIClient: NSObject {
         }
         return Singleton.sharedInstance
     }
-    
-//    override func setUserId(_ userId: String) {
-//        self.userId = userId
-//        
-//        // Get user info from Udacity
-//        self.requestUserInfo(userId)
-//        
-//        // Get user's objectId from parse
-//    }
     
     func getUserInfo(_ userId: String) {
         if (userId.isEmpty) {

@@ -27,7 +27,9 @@ extension SIClient {
         static let ContentType = "Content-Type"
         
         static let AuthorizationURL = "https://www.udacity.com/api/session"
-        static let signUpURL = "https://www.udacity.com"
+        static let SignUpURL = "https://www.udacity.com"
+        
+        static let StudentsLocationURL = "https://parse.udacity.com/parse/classes/StudentLocation"
     }
     
     // MARK: JSON Response Keys
