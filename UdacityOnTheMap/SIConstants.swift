@@ -17,14 +17,7 @@ extension SIClient {
         static let ParseApplicationID: String = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let ParseApplicationKey: String = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
         
-        // MARK: URLs
-        static let ApiScheme = "https"
-        static let ParseApiHost = "parse.udacity.com"
-        static let StudentListApiPath = "/parse/classes/StudentLocation"
-        
         static let ApplicationJson = "application/json"
-        static let Accept = "Accept"
-        static let ContentType = "Content-Type"
         
         static let UdacityURL = "https://www.udacity.com"
         static let AuthorizationURL = "\(UdacityURL)/api/session"
@@ -33,6 +26,12 @@ extension SIClient {
         static let StudentsLocationURL = "https://parse.udacity.com/parse/classes/StudentLocation"
         
         static let UdacityDataTrimLength = 5
+        
+        static let PostMethod = "POST"
+        static let GetMethod = "GET"
+        static let PutMethod = "PUT"
+        
+        static let LoginFailMsg = "Login failed. Please try again."
     }
     
     // MARK: JSON Response Keys
@@ -47,6 +46,9 @@ extension SIClient {
         static let AccountKey = "key"
         static let Session = "session"
         static let SessionID = "id"
+        static let Udacity = "udacity"
+        static let Username = "username"
+        static let Password = "password"
         
         // MARK: Student information from parse
         static let ObjectId = "objectId"
@@ -66,7 +68,8 @@ extension SIClient {
     struct ParametersKey {
         static let ParseAppIdKey: String = "X-Parse-Application-Id"
         static let ParseApiKey: String = "X-Parse-REST-API-Key"
-        
+        static let Accept = "Accept"
+        static let ContentType = "Content-Type"
     }
     
     struct Colors {

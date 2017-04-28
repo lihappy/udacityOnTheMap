@@ -122,7 +122,7 @@ class PostInfoViewController: LHBViewController {
             self.mapView.setRegion(region, animated: true)
             
             // UI
-            self.topTextView.text = "http://aaa.com"//Enter your link here
+            self.topTextView.text = "Enter your link here"
             self.topTextView.backgroundColor = SIClient.Colors.BlueColor
             self.topTextView.textColor = UIColor.white
             
@@ -133,9 +133,6 @@ class PostInfoViewController: LHBViewController {
             self.mapView.isHidden = false
             
         }
-        
-        
-        
         
     }
     
@@ -158,7 +155,7 @@ class PostInfoViewController: LHBViewController {
         let parameters: NSMutableDictionary = NSMutableDictionary()
         parameters.setObject(SIClient.Constants.ParseApplicationID, forKey: SIClient.ParametersKey.ParseAppIdKey as NSCopying)
         parameters.setObject(SIClient.Constants.ParseApplicationKey, forKey: SIClient.ParametersKey.ParseApiKey as NSCopying)
-        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.Constants.ContentType as NSCopying)
+        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.ParametersKey.ContentType as NSCopying)
         
         var firstName = ""
         if (SIClient.sharedInstance().firstName != nil) {
@@ -169,10 +166,10 @@ class PostInfoViewController: LHBViewController {
             lastName = SIClient.sharedInstance().lastName!
         }
         
-        let body = "{\"uniqueKey\": \"\(SIClient.sharedInstance().userId! as String)\", \"firstName\": \"\(firstName)\", \"lastName\": \"\(lastName)\",\"mapString\": \"\(self.mapString! as String)\", \"mediaURL\": \"\(self.mediaUrl! as String)\",\"latitude\": \(self.latitude! as Double), \"longitude\": \(self.longtitute! as Double)}"
+        let body = "{\"\(SIClient.JSONResponseKeys.UniqueKey)\": \"\(SIClient.sharedInstance().userId! as String)\", \"\(SIClient.JSONResponseKeys.FirstName)\": \"\(firstName)\", \"\(SIClient.JSONResponseKeys.LastName)\": \"\(lastName)\",\"\(SIClient.JSONResponseKeys.MapString)\": \"\(self.mapString! as String)\", \"\(SIClient.JSONResponseKeys.MediaURL)\": \"\(self.mediaUrl! as String)\",\"\(SIClient.JSONResponseKeys.Latitude)\": \(self.latitude! as Double), \"\(SIClient.JSONResponseKeys.Longitude)\": \(self.longtitute! as Double)}"
         
         var urlString: String = SIClient.Constants.StudentsLocationURL
-        var method: String = "POST"
+        var method: String = SIClient.Constants.PostMethod
         
         var objectId: String = ""
         if (SIClient.sharedInstance().objectId != nil) {
@@ -183,7 +180,7 @@ class PostInfoViewController: LHBViewController {
         
         if (!isPost) {
             urlString = urlString + "/\(objectId)"
-            method = "PUT"
+            method = SIClient.Constants.PutMethod
         }
         
         let _ = SIClient.sharedInstance().taskForHttpRequest(URL(string: urlString)!, method: method, parameters: parameters, jsonBody: body, needTrimData: false) { (result, error) in
@@ -200,13 +197,13 @@ class PostInfoViewController: LHBViewController {
             var updatedAt: String
             var isSucceeded: Bool = false
             if (isPost) {
-                objectId = (result!["objectId"] as? String)!
+                objectId = (result![SIClient.JSONResponseKeys.ObjectId] as? String)!
                 if (!objectId.isEmpty) {
                     isSucceeded = true
                     SIClient.sharedInstance().objectId = objectId
                 }
             } else {
-                updatedAt = (result!["updatedAt"] as? String)!
+                updatedAt = (result![SIClient.JSONResponseKeys.UpdatedAt] as? String)!
                 if (!updatedAt.isEmpty) {
                     isSucceeded = true
                 }
@@ -217,7 +214,7 @@ class PostInfoViewController: LHBViewController {
                     self.dismiss(animated: true, completion: nil)
                 }
             } else {
-                showSimpleErrorAlert(_message: "Post failed", _sender: self)
+                showSimpleErrorAlert(_message: "Failed", _sender: self)
             }
         }
         

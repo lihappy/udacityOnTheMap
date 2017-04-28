@@ -24,7 +24,6 @@ class SIClient: NSObject {
             
             // Get user objectId in Parse if have
             self.getUserLocationInfo(userId!)
-            
         }
     }
     var firstName: String?
@@ -48,7 +47,7 @@ class SIClient: NSObject {
         
         let url = URL(string: "\(SIClient.Constants.UserInfoURL)/\(userId)")!
         let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: NSMutableDictionary(), jsonBody: "", needTrimData: true) { (result, error) in
-            if (error != nil || result == nil) { // Handle error...
+            if (error != nil || result == nil) {
                 return
             }
             
@@ -66,7 +65,7 @@ class SIClient: NSObject {
             return
         }
         
-        let urlString = "\(SIClient.Constants.StudentsLocationURL)?where={\"uniqueKey\":\"\(userId)\"}"
+        let urlString = "\(SIClient.Constants.StudentsLocationURL)?where={\"\(SIClient.JSONResponseKeys.UniqueKey)\":\"\(userId)\"}"
         let escapedUrlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let url = URL(string: escapedUrlString!)!
         
@@ -82,7 +81,7 @@ class SIClient: NSObject {
             let results = result?[SIClient.JSONResponseKeys.Results] as? [[String:AnyObject]]
             if ((results?.count)! > 0) {
                 let firstResult = (results?[0])! as [String:AnyObject]
-                self.objectId = firstResult["objectId"] as! String?
+                self.objectId = firstResult[SIClient.JSONResponseKeys.ObjectId] as! String?
             }
         }
         
@@ -140,20 +139,6 @@ class SIClient: NSObject {
         task.resume()
         
         return task
-    }
-    
-    // given raw JSON, return a usable Foundation object
-    func convertDataWithCompletionHandler(_ data: Data, completionHandlerForConvertData: (_ result: AnyObject?, _ error: NSError?) -> Void) {
-        
-        var parsedResult: AnyObject! = nil
-        do {
-            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
-        } catch {
-            let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
-        }
-        
-        completionHandlerForConvertData(parsedResult, nil)
     }
     
 }

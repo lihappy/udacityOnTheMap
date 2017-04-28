@@ -32,38 +32,38 @@ class LoginViewController: LHBViewController {
         
         let url = URL(string: SIClient.Constants.AuthorizationURL)
         let parameters: NSMutableDictionary = NSMutableDictionary()
-        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.Constants.Accept as NSCopying)
-        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.Constants.ContentType as NSCopying)
+        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.ParametersKey.Accept as NSCopying)
+        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.ParametersKey.ContentType as NSCopying)
         
-        let body = "{\"udacity\": {\"username\": \"" + emailTextField.text! + "\", \"password\": \"" + passwordTextField.text! + "\"}}"
+        let body = "{\"\(SIClient.JSONResponseKeys.Udacity)\": {\"\(SIClient.JSONResponseKeys.Username)\": \"" + emailTextField.text! + "\", \"\(SIClient.JSONResponseKeys.Password)\": \"" + passwordTextField.text! + "\"}}"
         
-        let _ = SIClient.sharedInstance().taskForHttpRequest(url!, method: "POST", parameters: parameters, jsonBody: body, needTrimData: true) { (result, error) in
+        let _ = SIClient.sharedInstance().taskForHttpRequest(url!, method: SIClient.Constants.PostMethod, parameters: parameters, jsonBody: body, needTrimData: true) { (result, error) in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
             }
 
             if (error != nil || result == nil) {
-                showSimpleErrorAlert(_message: "Login failed. \(error?.localizedDescription)", _sender: self)
+                showSimpleErrorAlert(_message: "\(SIClient.Constants.LoginFailMsg) \(error?.localizedDescription)", _sender: self)
                 return
             }
             
-            let status = result!["status"] as? Int
+            let status = result![SIClient.JSONResponseKeys.StatusCode] as? Int
             if ( status != nil && status != 200 ) {
-                var errorMessage = result!["error"] as? String
-                errorMessage = errorMessage == nil ? "" : errorMessage!
-                showSimpleErrorAlert(_message: "Login Failed. " + errorMessage!, _sender: self)
+                let errorMessage = result![SIClient.JSONResponseKeys.Error] as? String
+//                errorMessage = errorMessage == nil ? "" : errorMessage!
+                showSimpleErrorAlert(_message: "\(SIClient.Constants.LoginFailMsg) \(errorMessage)", _sender: self)
                 return
             }
 
             //sucess
-            let account = result!["account"] as? [String:AnyObject]
-            let userId = account?["key"] as? String
+            let account = result![SIClient.JSONResponseKeys.Account] as? [String:AnyObject]
+            let userId = account?[SIClient.JSONResponseKeys.AccountKey] as? String
 
             if (!(userId?.isEmpty)!) {
                 SIClient.sharedInstance().userId = userId
                 self.dismiss(animated: true, completion: nil)
             } else {
-                showSimpleErrorAlert(_message: "Login failed. Please try again.", _sender: self)
+                showSimpleErrorAlert(_message: SIClient.Constants.LoginFailMsg, _sender: self)
             }
 
         }

@@ -37,12 +37,12 @@ struct StudentInformation {
         var students = [StudentInformation]()
         
         for result in results {
-            guard let objectId = result[SIClient.JSONResponseKeys.ObjectId],
-                let uniqueKey = result[SIClient.JSONResponseKeys.UniqueKey],
-                let firstName = result[SIClient.JSONResponseKeys.FirstName],
-                let lastName = result[SIClient.JSONResponseKeys.LastName],
-                let latitude = result[SIClient.JSONResponseKeys.Latitude],
-                let longitude = result[SIClient.JSONResponseKeys.Longitude]
+            guard let _ = result[SIClient.JSONResponseKeys.ObjectId],
+                let _ = result[SIClient.JSONResponseKeys.UniqueKey],
+                let _ = result[SIClient.JSONResponseKeys.FirstName],
+                let _ = result[SIClient.JSONResponseKeys.LastName],
+                let _ = result[SIClient.JSONResponseKeys.Latitude],
+                let _ = result[SIClient.JSONResponseKeys.Longitude]
                 else {
                 break
             }
@@ -54,10 +54,3 @@ struct StudentInformation {
     }
 }
 
-// MARK: - TMDBMovie: Equatable
-
-extension StudentInformation: Equatable {}
-
-func ==(lhs: StudentInformation, rhs: StudentInformation) -> Bool {
-    return lhs.objectId == rhs.objectId
-}
