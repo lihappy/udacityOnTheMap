@@ -39,15 +39,13 @@ class OnTheMapViewController: UITabBarController {
     func requestStudentsInfo() {
         self.activityIndicator.startAnimating()
         
-        let parameters: NSMutableDictionary = NSMutableDictionary()
-        parameters.setObject(SIClient.Constants.ParseApplicationID, forKey: SIClient.ParametersKey.ParseAppIdKey as NSCopying)
-        parameters.setObject(SIClient.Constants.ParseApplicationKey, forKey: SIClient.ParametersKey.ParseApiKey as NSCopying)
-        parameters.setObject("100", forKey: "limit" as NSCopying)
-        parameters.setObject("-updatedAt", forKey: "order" as NSCopying)
+        let parameters: NSMutableDictionary = getBaseParseParams()
+        parameters.setObject("100", forKey: SIClient.JSONResponseKeys.Limit as NSCopying)
+        parameters.setObject("-updatedAt", forKey: SIClient.JSONResponseKeys.Order as NSCopying)
         
         let url = URL(string: SIClient.Constants.StudentsLocationURL)!
         
-        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
+        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: SIClient.Constants.GetMethod, parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
             if (result != nil) {
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()

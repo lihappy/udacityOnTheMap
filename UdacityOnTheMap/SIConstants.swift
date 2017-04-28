@@ -42,6 +42,7 @@ extension SIClient {
         static let Error = "error"
         
         // MARK: Authorization
+        static let User = "user"
         static let Account = "account"
         static let AccountKey = "key"
         static let Session = "session"
@@ -62,6 +63,11 @@ extension SIClient {
         static let CreatedAt = "createdAt"
         static let UpdatedAt = "updatedAt"        
         static let Results = "results"
+        static let Limit = "limit"
+        static let Order = "order"
+        
+        static let FirstNameKey = "first_name"
+        static let LastNameKey = "last_name"
         
     }
     

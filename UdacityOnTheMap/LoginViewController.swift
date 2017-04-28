@@ -50,7 +50,6 @@ class LoginViewController: LHBViewController {
             let status = result![SIClient.JSONResponseKeys.StatusCode] as? Int
             if ( status != nil && status != 200 ) {
                 let errorMessage = result![SIClient.JSONResponseKeys.Error] as? String
-//                errorMessage = errorMessage == nil ? "" : errorMessage!
                 showSimpleErrorAlert(_message: "\(SIClient.Constants.LoginFailMsg) \(errorMessage)", _sender: self)
                 return
             }
@@ -74,7 +73,6 @@ class LoginViewController: LHBViewController {
         openUrlWithSafari(SIClient.Constants.UdacityURL)
     }
     
-   
 }
 
 extension LoginViewController: UITextFieldDelegate {

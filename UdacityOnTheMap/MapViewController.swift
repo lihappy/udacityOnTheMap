@@ -23,8 +23,7 @@ class MapViewController: UIViewController {
         self.students = SIClient.sharedInstance().studentArray
         self.annotations = self.generateAnnotationsFromStudents(self.students)
         
-        self.mapView.addAnnotations(self.annotations)
-        
+        self.mapView.addAnnotations(self.annotations)        
     }
     
     func updateAnnotations() {

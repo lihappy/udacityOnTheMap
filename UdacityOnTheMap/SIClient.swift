@@ -46,17 +46,14 @@ class SIClient: NSObject {
         }
         
         let url = URL(string: "\(SIClient.Constants.UserInfoURL)/\(userId)")!
-        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: NSMutableDictionary(), jsonBody: "", needTrimData: true) { (result, error) in
+        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: SIClient.Constants.GetMethod, parameters: NSMutableDictionary(), jsonBody: "", needTrimData: true) { (result, error) in
             if (error != nil || result == nil) {
                 return
             }
             
-            let user = result?["user"] as? [String:AnyObject]
-            let firstName = user?["first_name"] as? String
-            let lastName = user?["last_name"] as? String
-            
-            self.firstName = firstName
-            self.lastName = lastName
+            let user = result?[SIClient.JSONResponseKeys.User] as? [String:AnyObject]
+            self.firstName = user?[SIClient.JSONResponseKeys.FirstNameKey] as? String
+            self.lastName = user?[SIClient.JSONResponseKeys.LastNameKey] as? String
         }
     }
     
@@ -69,17 +66,15 @@ class SIClient: NSObject {
         let escapedUrlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let url = URL(string: escapedUrlString!)!
         
-        let parameters: NSMutableDictionary = NSMutableDictionary()
-        parameters.setObject(SIClient.Constants.ParseApplicationID, forKey: SIClient.ParametersKey.ParseAppIdKey as NSCopying)
-        parameters.setObject(SIClient.Constants.ParseApplicationKey, forKey: SIClient.ParametersKey.ParseApiKey as NSCopying)
+        let parameters: NSMutableDictionary = getBaseParseParams()
         
-        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
-            if (error != nil || result == nil) { // Handle error
+        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: SIClient.Constants.GetMethod, parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
+            if (error != nil || result == nil) {
                 return
             }
             
             let results = result?[SIClient.JSONResponseKeys.Results] as? [[String:AnyObject]]
-            if ((results?.count)! > 0) {
+            if (results != nil && (results?.count)! > 0) {
                 let firstResult = (results?[0])! as [String:AnyObject]
                 self.objectId = firstResult[SIClient.JSONResponseKeys.ObjectId] as! String?
             }
@@ -155,5 +150,12 @@ func showSimpleErrorAlert(_message: String, _sender: AnyObject) {
 func openUrlWithSafari(_ urlString: String) {
     let url = URL.init(string: urlString)
     UIApplication.shared.openURL(url!)    
+}
+
+func getBaseParseParams() -> NSMutableDictionary {
+    let parameters: NSMutableDictionary = NSMutableDictionary()
+    parameters.setObject(SIClient.Constants.ParseApplicationID, forKey: SIClient.ParametersKey.ParseAppIdKey as NSCopying)
+    parameters.setObject(SIClient.Constants.ParseApplicationKey, forKey: SIClient.ParametersKey.ParseApiKey as NSCopying)
+    return parameters
 }
 

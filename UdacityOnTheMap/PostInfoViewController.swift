@@ -29,35 +29,16 @@ class PostInfoViewController: LHBViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.defaultUI()
-
+        self.setDefaultUI()
     }
     
-    func defaultUI() {
-        
+    func setDefaultUI() {
         self.topTextView.delegate = self
         self.bottomTextView.delegate = self
         
+        self.initTopTextView()
+        
         self.view.backgroundColor = SIClient.Colors.GrayColor
-        
-        self.topTextView.isUserInteractionEnabled = false
-        
-        self.topTextView.backgroundColor = SIClient.Colors.GrayColor
-        
-        let questionString: NSString = "Where are you\nstudying\ntoday"
-        let attributeString: NSMutableAttributedString = NSMutableAttributedString.init(string: questionString as String)
-        
-        attributeString.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 32.0), range: questionString.range(of: questionString as String))
-        attributeString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFont(ofSize: 36.0), range: questionString.range(of: "studying"))
-        attributeString.addAttribute(NSForegroundColorAttributeName, value: SIClient.Colors.BlueColor, range: questionString.range(of: questionString as String))
-        
-        let style = NSMutableParagraphStyle()
-        style.alignment = NSTextAlignment.center
-        attributeString.addAttribute(NSParagraphStyleAttributeName, value: style, range: questionString.range(of: questionString as String))
-        
-        self.topTextView.attributedText = attributeString
-    
-
         
         self.findOnTheMapButton.tintColor = SIClient.Colors.BlueColor
         self.findOnTheMapButton.backgroundColor = UIColor.white
@@ -74,7 +55,23 @@ class PostInfoViewController: LHBViewController {
         self.submitButton.isHidden = true
     }
     
-
+    func initTopTextView() {
+        self.topTextView.isUserInteractionEnabled = false
+        self.topTextView.backgroundColor = SIClient.Colors.GrayColor
+        
+        let questionString: NSString = "Where are you\nstudying\ntoday"
+        let attributeString: NSMutableAttributedString = NSMutableAttributedString.init(string: questionString as String)
+        
+        attributeString.addAttribute(NSFontAttributeName, value: UIFont.systemFont(ofSize: 32.0), range: questionString.range(of: questionString as String))
+        attributeString.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFont(ofSize: 36.0), range: questionString.range(of: "studying"))
+        attributeString.addAttribute(NSForegroundColorAttributeName, value: SIClient.Colors.BlueColor, range: questionString.range(of: questionString as String))
+        
+        let style = NSMutableParagraphStyle()
+        style.alignment = NSTextAlignment.center
+        attributeString.addAttribute(NSParagraphStyleAttributeName, value: style, range: questionString.range(of: questionString as String))
+        
+        self.topTextView.attributedText = attributeString
+    }
     
     @IBAction func findOnTheMap(_ sender: Any) {
         // Check mapString
@@ -83,11 +80,13 @@ class PostInfoViewController: LHBViewController {
             return
         }
         
+        self.mapString = self.bottomTextView.text
+        
         // find on the map
         self.activityIndicator.startAnimating();
         
         let localSearchRequest = MKLocalSearchRequest()
-        localSearchRequest.naturalLanguageQuery = self.bottomTextView.text
+        localSearchRequest.naturalLanguageQuery = self.mapString
         let localSearch = MKLocalSearch(request: localSearchRequest)
         localSearch.start { (localSearchResponse, error) -> Void in
             
@@ -101,27 +100,25 @@ class PostInfoViewController: LHBViewController {
                 return
             }
             
-            // Succeeded
+            // Add annotation
             self.pointAnnotation = MKPointAnnotation()
-            self.pointAnnotation.title = self.bottomTextView.text
+            self.pointAnnotation.title = self.mapString
             
             self.longtitute = localSearchResponse!.boundingRegion.center.longitude
             self.latitude = localSearchResponse?.boundingRegion.center.latitude
-            self.mapString = self.bottomTextView.text
             
             let coordinate = CLLocationCoordinate2D(latitude: self.latitude!, longitude: self.longtitute!)
-            
             self.pointAnnotation.coordinate = coordinate
             
             self.mapView .addAnnotation(self.pointAnnotation)
             
+            // Zoom map
             self.mapView.centerCoordinate = coordinate
-            
             let span = MKCoordinateSpan.init(latitudeDelta: 5.0, longitudeDelta: 5.0)
             let region = MKCoordinateRegion.init(center: coordinate, span: span)
             self.mapView.setRegion(region, animated: true)
             
-            // UI
+            // Change UI
             self.topTextView.text = "Enter your link here"
             self.topTextView.backgroundColor = SIClient.Colors.BlueColor
             self.topTextView.textColor = UIColor.white
@@ -137,7 +134,6 @@ class PostInfoViewController: LHBViewController {
     }
     
     @IBAction func submit(_ sender: Any) {
-        self.activityIndicator.startAnimating()
         
         // Check mapString
         if (self.topTextView.text == nil || self.topTextView.text == ""){
@@ -146,15 +142,15 @@ class PostInfoViewController: LHBViewController {
         }
         self.mediaUrl = self.topTextView.text
         
-        //Check if it's url
+        //Check if it's a valid url
         if (!self.isURLValid(string: self.mediaUrl)) {
             showSimpleErrorAlert(_message: "Invalid URL link", _sender: self)
             return
         }
         
-        let parameters: NSMutableDictionary = NSMutableDictionary()
-        parameters.setObject(SIClient.Constants.ParseApplicationID, forKey: SIClient.ParametersKey.ParseAppIdKey as NSCopying)
-        parameters.setObject(SIClient.Constants.ParseApplicationKey, forKey: SIClient.ParametersKey.ParseApiKey as NSCopying)
+        self.activityIndicator.startAnimating()
+        
+        let parameters: NSMutableDictionary = getBaseParseParams()
         parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.ParametersKey.ContentType as NSCopying)
         
         var firstName = ""
@@ -230,20 +226,6 @@ class PostInfoViewController: LHBViewController {
         return predicate.evaluate(with: string)
     }
     
-//    func showActivityIndicatory(uiView: UIView) {
-//        let actInd: UIActivityIndicatorView = UIActivityIndicatorView()
-////        actInd.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
-//        actInd.frame = uiView.frame
-////        actInd.frame(forAlignmentRect: <#T##CGRect#>)
-//        actInd.center = uiView.center
-//        actInd.hidesWhenStopped = true
-//        actInd.activityIndicatorViewStyle =
-//            UIActivityIndicatorViewStyle.whiteLarge
-//        uiView.addSubview(actInd)
-//        actInd.startAnimating()
-//    }
-    
-
 }
 
 extension PostInfoViewController: UITextViewDelegate {
