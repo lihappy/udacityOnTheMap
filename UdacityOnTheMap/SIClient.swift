@@ -116,7 +116,7 @@ class SIClient: NSObject {
                 let range = Range(SIClient.Constants.UdacityDataTrimLength..<data!.count)
                 newData = data!.subdata(in: range) /* subset response data! */
             }
-            
+
             // parse the data
             let parsedResult: [String:AnyObject]!
             do {

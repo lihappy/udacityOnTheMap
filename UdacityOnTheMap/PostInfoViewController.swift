@@ -188,13 +188,13 @@ class PostInfoViewController: LHBViewController {
             if (error != nil || result == nil) {
                 showSimpleErrorAlert(_message: "Failed", _sender: self)
             }
-            
-            var objectId: String
+
+            var objectId: String?
             var updatedAt: String
             var isSucceeded: Bool = false
             if (isPost) {
-                objectId = (result![SIClient.JSONResponseKeys.ObjectId] as? String)!
-                if (!objectId.isEmpty) {
+                objectId = result?[SIClient.JSONResponseKeys.ObjectId] as? String
+                if (!(objectId?.isEmpty)!) {
                     isSucceeded = true
                     SIClient.sharedInstance().objectId = objectId
                 }

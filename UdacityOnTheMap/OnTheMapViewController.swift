@@ -44,7 +44,9 @@ class OnTheMapViewController: UITabBarController {
         }
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            self.activityIndicator.stopAnimating()
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+            }
             
             if (error != nil || data == nil) {
                 showSimpleErrorAlert(_message: SIClient.Constants.LogoutFailMsg, _sender: self)
@@ -103,6 +105,10 @@ class OnTheMapViewController: UITabBarController {
         let url = URL(string: SIClient.Constants.StudentsLocationURL)!
         
         let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: SIClient.Constants.GetMethod, parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+            }
+            
             if (error != nil || result == nil) {
                 showSimpleErrorAlert(_message: "Failed to download students info.", _sender: self)
             }
@@ -126,6 +132,7 @@ class OnTheMapViewController: UITabBarController {
         let viewControllers: [UIViewController] = (rootVC.viewControllers)!
         if (viewControllers.count >= 2) {
             let listVC = viewControllers[1] as! ListTableViewController
+            listVC.students = SIClient.sharedInstance().studentArray
             listVC.tableView.reloadData()
             
             let mapVC = viewControllers[0] as! MapViewController
