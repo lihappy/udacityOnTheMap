@@ -186,52 +186,27 @@ class PostInfoViewController: LHBViewController {
             method = "PUT"
         }
         
-//        SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: parameters, jsonBody: body, needConvertData: true) { (result, error) in
-////            self.saveStudentsInfo(result!)
-//            if (result == nil) {
-//                showSimpleErrorAlert(_message: "Failed", _sender: self)
-//            }
-//        }
-        
-        let request = NSMutableURLRequest(url: URL(string: urlString)!)
-        request.httpMethod = method
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = body.data(using: String.Encoding.utf8)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
+        let _ = SIClient.sharedInstance().taskForHttpRequest(URL(string: urlString)!, method: method, parameters: parameters, jsonBody: body, needTrimData: false) { (result, error) in
             
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
             }
             
-            if (error != nil || data == nil) { // Handle error…
-                showSimpleErrorAlert(_message: "Post Info failed", _sender: self)
-            }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-            
-            // parse the data
-            let parsedResult: [String:AnyObject]!
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
-            } catch {
-                NSLog("Could not parse the data as JSON: '\(data)'")
-                showSimpleErrorAlert(_message: "Post Info failed", _sender: self)
-                return
+            if (error != nil || result == nil) {
+                showSimpleErrorAlert(_message: "Failed", _sender: self)
             }
             
             var objectId: String
             var updatedAt: String
             var isSucceeded: Bool = false
             if (isPost) {
-                objectId = (parsedResult["objectId"] as? String)!
+                objectId = (result!["objectId"] as? String)!
                 if (!objectId.isEmpty) {
                     isSucceeded = true
                     SIClient.sharedInstance().objectId = objectId
                 }
             } else {
-                updatedAt = (parsedResult["updatedAt"] as? String)!
+                updatedAt = (result!["updatedAt"] as? String)!
                 if (!updatedAt.isEmpty) {
                     isSucceeded = true
                 }
@@ -245,8 +220,6 @@ class PostInfoViewController: LHBViewController {
                 showSimpleErrorAlert(_message: "Post failed", _sender: self)
             }
         }
-        task.resume()
-        
         
     }
     
@@ -260,18 +233,18 @@ class PostInfoViewController: LHBViewController {
         return predicate.evaluate(with: string)
     }
     
-    func showActivityIndicatory(uiView: UIView) {
-        let actInd: UIActivityIndicatorView = UIActivityIndicatorView()
-//        actInd.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
-        actInd.frame = uiView.frame
-//        actInd.frame(forAlignmentRect: <#T##CGRect#>)
-        actInd.center = uiView.center
-        actInd.hidesWhenStopped = true
-        actInd.activityIndicatorViewStyle =
-            UIActivityIndicatorViewStyle.whiteLarge
-        uiView.addSubview(actInd)
-        actInd.startAnimating()
-    }
+//    func showActivityIndicatory(uiView: UIView) {
+//        let actInd: UIActivityIndicatorView = UIActivityIndicatorView()
+////        actInd.frame = CGRectMake(0.0, 0.0, 40.0, 40.0);
+//        actInd.frame = uiView.frame
+////        actInd.frame(forAlignmentRect: <#T##CGRect#>)
+//        actInd.center = uiView.center
+//        actInd.hidesWhenStopped = true
+//        actInd.activityIndicatorViewStyle =
+//            UIActivityIndicatorViewStyle.whiteLarge
+//        uiView.addSubview(actInd)
+//        actInd.startAnimating()
+//    }
     
 
 }

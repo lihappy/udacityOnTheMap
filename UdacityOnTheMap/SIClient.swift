@@ -46,33 +46,19 @@ class SIClient: NSObject {
             return
         }
         
-        let request = NSMutableURLRequest(url: URL(string: "https://www.udacity.com/api/users/\(userId)")!)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error...
-                return
-            }
-            let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range) /* subset response data! */
-            //            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
-            
-            // parse the data
-            let parsedResult: [String:AnyObject]!
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as! [String:AnyObject]
-            } catch {
-                NSLog("Could not parse the data as JSON: '\(data)'")
+        let url = URL(string: "\(SIClient.Constants.UserInfoURL)/\(userId)")!
+        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: NSMutableDictionary(), jsonBody: "", needTrimData: true) { (result, error) in
+            if (error != nil || result == nil) { // Handle error...
                 return
             }
             
-            let user = parsedResult["user"] as? [String:AnyObject]
+            let user = result?["user"] as? [String:AnyObject]
             let firstName = user?["first_name"] as? String
             let lastName = user?["last_name"] as? String
             
             self.firstName = firstName
             self.lastName = lastName
         }
-        task.resume()
     }
     
     func getUserLocationInfo(_ userId: String) {
@@ -80,39 +66,29 @@ class SIClient: NSObject {
             return
         }
         
-        let urlString = "https://parse.udacity.com/parse/classes/StudentLocation?where={\"uniqueKey\":\"\(userId)\"}"
+        let urlString = "\(SIClient.Constants.StudentsLocationURL)?where={\"uniqueKey\":\"\(userId)\"}"
         let escapedUrlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        let url = URL(string: escapedUrlString!)
-        let request = NSMutableURLRequest(url: url!)
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error
-                return
-            }
-            print(NSString(data: data!, encoding: String.Encoding.utf8.rawValue)!)
-            
-            // parse the data
-            let parsedResult: [String:AnyObject]!
-            do {
-                parsedResult = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
-            } catch {
-                NSLog("Could not parse the data as JSON: '\(data)'")
+        let url = URL(string: escapedUrlString!)!
+        
+        let parameters: NSMutableDictionary = NSMutableDictionary()
+        parameters.setObject(SIClient.Constants.ParseApplicationID, forKey: SIClient.ParametersKey.ParseAppIdKey as NSCopying)
+        parameters.setObject(SIClient.Constants.ParseApplicationKey, forKey: SIClient.ParametersKey.ParseApiKey as NSCopying)
+        
+        let _ = SIClient.sharedInstance().taskForHttpRequest(url, method: "GET", parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
+            if (error != nil || result == nil) { // Handle error
                 return
             }
             
-            let results = parsedResult[SIClient.JSONResponseKeys.Results] as? [[String:AnyObject]]
+            let results = result?[SIClient.JSONResponseKeys.Results] as? [[String:AnyObject]]
             if ((results?.count)! > 0) {
                 let firstResult = (results?[0])! as [String:AnyObject]
                 self.objectId = firstResult["objectId"] as! String?
             }
-            
         }
-        task.resume()
+        
     }
     
-    func taskForHttpRequest(_ url: URL, method: String, parameters: NSDictionary, jsonBody: String, needConvertData: Bool, completionHandlerForPOST: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    func taskForHttpRequest(_ url: URL, method: String, parameters: NSDictionary, jsonBody: String, needTrimData: Bool, completionHandlerForPOST: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         let request = NSMutableURLRequest(url: url)
         request.httpMethod = method
@@ -130,37 +106,34 @@ class SIClient: NSObject {
             }
             
             /* GUARD: Was there an error? */
-            guard (error == nil) else {
+            if (error != nil) {
                 sendError("There was an error with your request: \(error)")
                 return
             }
             
-            /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
-                sendError("Your request returned a status code other than 2xx!")
-                return
-            }
-            
             /* GUARD: Was there any data returned? */
-            guard let data = data else {
+            if (data == nil) {
                 sendError("No data was returned by the request!")
                 return
             }
             
-            if (needConvertData) {
-//                self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForPOST)
-                var parsedResult: AnyObject! = nil
-                do {
-                    parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
-                } catch {
-                    sendError("Could not parse the data as JSON: '\(data)'")
-//                    let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-//                    completionHandlzerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
-                }
-                completionHandlerForPOST(parsedResult, nil)
-            } else {
-                completionHandlerForPOST(data as AnyObject?, nil)
+            var newData = data
+            if (needTrimData) {
+                let range = Range(SIClient.Constants.UdacityDataTrimLength..<data!.count)
+                newData = data!.subdata(in: range) /* subset response data! */
             }
+            
+            // parse the data
+            let parsedResult: [String:AnyObject]!
+            do {
+                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as! [String:AnyObject]
+            } catch {
+                NSLog("Could not parse the data as JSON: '\(newData)'")
+                sendError("Could not parse the data")
+                return
+            }
+            
+            completionHandlerForPOST(parsedResult as AnyObject?, nil)
         }
         
         /* 7. Start the request */
