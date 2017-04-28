@@ -30,8 +30,10 @@ extension SIClient {
         static let PostMethod = "POST"
         static let GetMethod = "GET"
         static let PutMethod = "PUT"
+        static let DeleteMethod = "DELETE"
         
         static let LoginFailMsg = "Login failed. Please try again."
+        static let LogoutFailMsg = "Logout failed. Please try again."
     }
     
     // MARK: JSON Response Keys
@@ -76,6 +78,8 @@ extension SIClient {
         static let ParseApiKey: String = "X-Parse-REST-API-Key"
         static let Accept = "Accept"
         static let ContentType = "Content-Type"
+        static let XsrfCookieKey = "X-XSRF-TOKEN"
+        static let XsrfCookieName = "XSRF-TOKEN"
     }
     
     struct Colors {

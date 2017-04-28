@@ -313,6 +313,11 @@
             <objects>
                 <tabBarController storyboardIdentifier="rootVC" id="d40-Rq-t0D" customClass="OnTheMapViewController" customModule="UdacityOnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="On The Map" id="v2V-it-2YE">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="jSk-ti-8tS">
+                            <connections>
+                                <action selector="logout:" destination="d40-Rq-t0D" id="Mcy-11-Gyd"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem image="icon_refresh" id="sjX-e4-sQN">
                                 <connections>
