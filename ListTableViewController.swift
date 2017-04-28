@@ -17,7 +17,6 @@ class ListTableViewController: UITableViewController {
         
         students = SIClient.sharedInstance().studentArray
         self.tableView.reloadData()
-
     }
 
     // MARK: - Table view data source

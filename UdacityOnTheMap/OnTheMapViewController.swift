@@ -24,7 +24,6 @@ class OnTheMapViewController: UITabBarController {
         
         // Load data
         self.requestStudentsInfo()
-        
     }
     
     @IBAction func refresh(_ sender: Any) {
@@ -52,6 +51,8 @@ class OnTheMapViewController: UITabBarController {
                 }
                 
                 self.saveStudentsInfo(result!)
+                
+                // Refresh map and list with the new data
                 self.updateData()
             }
         }
