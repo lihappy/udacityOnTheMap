@@ -14,14 +14,12 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
-    var students = [StudentInformation]()
     var annotations = [MKPointAnnotation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.students = SIClient.sharedInstance().studentArray
-        self.annotations = self.generateAnnotationsFromStudents(self.students)
+        self.annotations = self.generateAnnotationsFromStudents(SIModel.sharedInstance().studentArray)
         
         self.mapView.addAnnotations(self.annotations)        
     }
@@ -31,8 +29,7 @@ class MapViewController: UIViewController {
             self.mapView.removeAnnotations(self.annotations)
         }
         
-        self.students = SIClient.sharedInstance().studentArray
-        self.annotations = self.generateAnnotationsFromStudents(self.students)
+        self.annotations = self.generateAnnotationsFromStudents(SIModel.sharedInstance().studentArray)
         self.mapView.addAnnotations(self.annotations)
     }
 

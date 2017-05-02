@@ -20,6 +20,7 @@
 		513843061EA9B3E400989B7A /* SIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513843051EA9B3E400989B7A /* SIConstants.swift */; };
 		513843081EA9B5AA00989B7A /* SIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513843071EA9B5AA00989B7A /* SIClient.swift */; };
 		513F50D11EB1C7E10049C804 /* LHBViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513F50D01EB1C7E10049C804 /* LHBViewController.swift */; };
+		51DB3EE41EB81FCC0018E0AE /* SIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51DB3EE31EB81FCC0018E0AE /* SIModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		513843051EA9B3E400989B7A /* SIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SIConstants.swift; sourceTree = "<group>"; };
 		513843071EA9B5AA00989B7A /* SIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SIClient.swift; sourceTree = "<group>"; };
 		513F50D01EB1C7E10049C804 /* LHBViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LHBViewController.swift; sourceTree = "<group>"; };
+		51DB3EE31EB81FCC0018E0AE /* SIModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SIModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				513843031EA9A75000989B7A /* StudentInformation.swift */,
 				513843051EA9B3E400989B7A /* SIConstants.swift */,
 				513843071EA9B5AA00989B7A /* SIClient.swift */,
+				51DB3EE31EB81FCC0018E0AE /* SIModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -181,6 +184,7 @@
 				513843011EA8909400989B7A /* OnTheMapViewController.swift in Sources */,
 				513842F91EA85E5C00989B7A /* PostInfoViewController.swift in Sources */,
 				513842F71EA85E2200989B7A /* LoginViewController.swift in Sources */,
+				51DB3EE41EB81FCC0018E0AE /* SIModel.swift in Sources */,
 				513842FF1EA8850400989B7A /* ListTableViewController.swift in Sources */,
 				513842FB1EA8849A00989B7A /* MapViewController.swift in Sources */,
 				513842E51EA85AF300989B7A /* AppDelegate.swift in Sources */,

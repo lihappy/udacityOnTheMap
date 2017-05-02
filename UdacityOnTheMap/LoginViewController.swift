@@ -28,45 +28,15 @@ class LoginViewController: LHBViewController {
             return
         }
         
-        self.activityIndicator.startAnimating()
+        SIClient.sharedInstance().login(self)
         
-        let url = URL(string: SIClient.Constants.AuthorizationURL)
-        let parameters: NSMutableDictionary = NSMutableDictionary()
-        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.ParametersKey.Accept as NSCopying)
-        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.ParametersKey.ContentType as NSCopying)
-        
-        let body = "{\"\(SIClient.JSONResponseKeys.Udacity)\": {\"\(SIClient.JSONResponseKeys.Username)\": \"" + emailTextField.text! + "\", \"\(SIClient.JSONResponseKeys.Password)\": \"" + passwordTextField.text! + "\"}}"
-        
-        let _ = SIClient.sharedInstance().taskForHttpRequest(url!, method: SIClient.Constants.PostMethod, parameters: parameters, jsonBody: body, needTrimData: true) { (result, error) in
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-            }
-
-            if (error != nil || result == nil) {
-                showSimpleErrorAlert(_message: "\(SIClient.Constants.LoginFailMsg) \(error?.localizedDescription)", _sender: self)
-                return
-            }
-            
-            let status = result![SIClient.JSONResponseKeys.StatusCode] as? Int
-            if ( status != nil && status != 200 ) {
-                let errorMessage = result![SIClient.JSONResponseKeys.Error] as? String
-                showSimpleErrorAlert(_message: "\(SIClient.Constants.LoginFailMsg) \(errorMessage)", _sender: self)
-                return
-            }
-
-            //sucess
-            let account = result![SIClient.JSONResponseKeys.Account] as? [String:AnyObject]
-            let userId = account?[SIClient.JSONResponseKeys.AccountKey] as? String
-
-            if (!(userId?.isEmpty)!) {
-                SIClient.sharedInstance().userId = userId
-                self.dismiss(animated: true, completion: nil)
-            } else {
-                showSimpleErrorAlert(_message: SIClient.Constants.LoginFailMsg, _sender: self)
-            }
-
+    }
+    
+    func completeLogin() {
+        DispatchQueue.main.async {
+            let controller = self.storyboard!.instantiateViewController(withIdentifier: "navigationViewController") as! UINavigationController
+            self.present(controller, animated: true, completion: nil)
         }
-        
     }
     
     @IBAction func signUp(_ sender: Any) {

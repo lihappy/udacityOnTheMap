@@ -9,13 +9,10 @@
 import UIKit
 
 class ListTableViewController: UITableViewController {
-    
-    var students = [StudentInformation]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        students = SIClient.sharedInstance().studentArray
         self.tableView.reloadData()
     }
 
@@ -26,15 +23,14 @@ class ListTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.students.count
+        return SIModel.sharedInstance().studentArray.count
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
         // Configure the cell...
-        let student = students[indexPath.row]
+        let student = SIModel.sharedInstance().studentArray[indexPath.row]
         cell.imageView?.image = UIImage.init(named: "icon_pin")
         cell.textLabel?.text = "\(student.firstName) \(student.lastName)"
 
@@ -42,7 +38,7 @@ class ListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let student = students[indexPath.row]
+        let student = SIModel.sharedInstance().studentArray[indexPath.row]
         openUrlWithSafari(student.mediaURL!)
     }
     

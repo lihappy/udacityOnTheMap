@@ -95,6 +95,11 @@ class PostInfoViewController: LHBViewController {
             }
             
             // Failed
+            if (error != nil) {
+                showSimpleErrorAlert(_message: (error?.localizedDescription)!, _sender: self)
+                return
+            }
+            
             if localSearchResponse == nil{
                 showSimpleErrorAlert(_message: "Place not found", _sender: self)
                 return
@@ -148,71 +153,7 @@ class PostInfoViewController: LHBViewController {
             return
         }
         
-        self.activityIndicator.startAnimating()
-        
-        let parameters: NSMutableDictionary = getBaseParseParams()
-        parameters.setObject(SIClient.Constants.ApplicationJson, forKey: SIClient.ParametersKey.ContentType as NSCopying)
-        
-        var firstName = ""
-        if (SIClient.sharedInstance().firstName != nil) {
-            firstName = SIClient.sharedInstance().firstName!
-        }
-        var lastName = ""
-        if (SIClient.sharedInstance().lastName != nil) {
-            lastName = SIClient.sharedInstance().lastName!
-        }
-        
-        let body = "{\"\(SIClient.JSONResponseKeys.UniqueKey)\": \"\(SIClient.sharedInstance().userId! as String)\", \"\(SIClient.JSONResponseKeys.FirstName)\": \"\(firstName)\", \"\(SIClient.JSONResponseKeys.LastName)\": \"\(lastName)\",\"\(SIClient.JSONResponseKeys.MapString)\": \"\(self.mapString! as String)\", \"\(SIClient.JSONResponseKeys.MediaURL)\": \"\(self.mediaUrl! as String)\",\"\(SIClient.JSONResponseKeys.Latitude)\": \(self.latitude! as Double), \"\(SIClient.JSONResponseKeys.Longitude)\": \(self.longtitute! as Double)}"
-        
-        var urlString: String = SIClient.Constants.StudentsLocationURL
-        var method: String = SIClient.Constants.PostMethod
-        
-        var objectId: String = ""
-        if (SIClient.sharedInstance().objectId != nil) {
-            objectId = SIClient.sharedInstance().objectId!
-        }
-        var isPost: Bool = false
-        isPost = objectId.isEmpty
-        
-        if (!isPost) {
-            urlString = urlString + "/\(objectId)"
-            method = SIClient.Constants.PutMethod
-        }
-        
-        let _ = SIClient.sharedInstance().taskForHttpRequest(URL(string: urlString)!, method: method, parameters: parameters, jsonBody: body, needTrimData: false) { (result, error) in
-            
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-            }
-            
-            if (error != nil || result == nil) {
-                showSimpleErrorAlert(_message: "Failed", _sender: self)
-            }
-
-            var objectId: String?
-            var updatedAt: String
-            var isSucceeded: Bool = false
-            if (isPost) {
-                objectId = result?[SIClient.JSONResponseKeys.ObjectId] as? String
-                if (!(objectId?.isEmpty)!) {
-                    isSucceeded = true
-                    SIClient.sharedInstance().objectId = objectId
-                }
-            } else {
-                updatedAt = (result![SIClient.JSONResponseKeys.UpdatedAt] as? String)!
-                if (!updatedAt.isEmpty) {
-                    isSucceeded = true
-                }
-            }
-            
-            if (isSucceeded) {
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true, completion: nil)
-                }
-            } else {
-                showSimpleErrorAlert(_message: "Failed", _sender: self)
-            }
-        }
+        SIClient.sharedInstance().postLocation(self)
         
     }
     
