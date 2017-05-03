@@ -32,48 +32,6 @@ class SIClient: NSObject {
         }
         request.httpBody = jsonBody.data(using: String.Encoding.utf8)
         
-//        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
-//            
-//            func sendError(_ error: String) {
-//                print(error)
-//                let userInfo = [NSLocalizedDescriptionKey : error]
-//                completionHandlerForPOST(nil, NSError(domain: "startHttpTask", code: 1, userInfo: userInfo))
-//            }
-//            
-//            /* GUARD: Was there an error? */
-//            if (error != nil) {
-//                sendError("There was an error with your request: \(error?.localizedDescription)")
-//                return
-//            }
-//            
-//            /* GUARD: Was there any data returned? */
-//            if (data == nil) {
-//                sendError("No data was returned by the request!")
-//                return
-//            }
-//            
-//            var newData = data
-//            if (needTrimData) {
-//                let range = Range(SIClient.Constants.UdacityDataTrimLength..<data!.count)
-//                newData = data!.subdata(in: range) /* subset response data! */
-//            }
-//
-//            // parse the data
-//            let parsedResult: [String:AnyObject]!
-//            do {
-//                parsedResult = try JSONSerialization.jsonObject(with: newData!, options: .allowFragments) as! [String:AnyObject]
-//            } catch {
-//                NSLog("Could not parse the data as JSON: '\(newData)'")
-//                sendError("Could not parse the data")
-//                return
-//            }
-//            
-//            completionHandlerForPOST(parsedResult as AnyObject?, nil)
-//        }
-//        
-//        /* 7. Start the request */
-//        task.resume()
-        
         return self.taskForHttpRequest(request, needTrimData: needTrimData, completionHandlerForPOST: completionHandlerForPOST)
     }
     
@@ -280,8 +238,10 @@ class SIClient: NSObject {
                 SIModel.sharedInstance().firstName = ""
                 SIModel.sharedInstance().lastName = ""
                 SIModel.sharedInstance().objectId = ""
-
-                sender.dismiss(animated: true, completion: nil)
+                
+                DispatchQueue.main.async {
+                    sender.dismiss(animated: true, completion: nil)
+                }
             } else {
                 showSimpleErrorAlert(_message: SIClient.Constants.LogoutFailMsg, _sender: sender)
             }
@@ -299,9 +259,11 @@ class SIClient: NSObject {
         let url = URL(string: SIClient.Constants.StudentsLocationURL)!
         
         let _ = SIClient.sharedInstance().startHttpTask(url, method: SIClient.Constants.GetMethod, parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
+            
             DispatchQueue.main.async {
                 sender.activityIndicator.stopAnimating()
             }
+            
             if (error != nil) {
                 showSimpleErrorAlert(_message: (error?.localizedDescription)!, _sender: sender)
                 return
@@ -319,10 +281,6 @@ class SIClient: NSObject {
             }
             
             if (result != nil) {
-                DispatchQueue.main.async {
-                    sender.activityIndicator.stopAnimating()
-                }
-                
                 sender.saveStudentsInfo(result!)
                 
                 // Refresh map and list with the new data
@@ -331,6 +289,47 @@ class SIClient: NSObject {
         }
     }
     
+    func getAndSaveUserName(_ userId: String) {
+        if (userId.isEmpty) {
+            return
+        }
+        
+        let url = URL(string: "\(SIClient.Constants.UserInfoURL)/\(userId)")!
+        let _ = SIClient.sharedInstance().startHttpTask(url, method: SIClient.Constants.GetMethod, parameters: NSMutableDictionary(), jsonBody: "", needTrimData: true) { (result, error) in
+            if (error != nil || result == nil) {
+                return
+            }
+            
+            let user = result?[SIClient.JSONResponseKeys.User] as? [String:AnyObject]
+            SIModel.sharedInstance().firstName = user?[SIClient.JSONResponseKeys.FirstNameKey] as? String
+            SIModel.sharedInstance().lastName = user?[SIClient.JSONResponseKeys.LastNameKey] as? String
+        }
+    }
+    
+    func getAndSaveUserLocationId(_ userId: String) {
+        if (userId.isEmpty) {
+            return
+        }
+        
+        let urlString = "\(SIClient.Constants.StudentsLocationURL)?where={\"\(SIClient.JSONResponseKeys.UniqueKey)\":\"\(userId)\"}"
+        let escapedUrlString = urlString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let url = URL(string: escapedUrlString!)!
+        
+        let parameters: NSMutableDictionary = getBaseParseParams()
+        
+        let _ = SIClient.sharedInstance().startHttpTask(url, method: SIClient.Constants.GetMethod, parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
+            if (error != nil || result == nil || (result?[SIClient.JSONResponseKeys.Error] as? String != nil)) {
+                return
+            }
+            
+            let results = result?[SIClient.JSONResponseKeys.Results] as? [[String:AnyObject]]
+            if (results != nil && (results?.count)! > 0) {
+                let firstResult = (results?[0])! as [String:AnyObject]
+                SIModel.sharedInstance().objectId = firstResult[SIClient.JSONResponseKeys.ObjectId] as? String
+            }
+        }
+        
+    }
     
 }
 
@@ -345,7 +344,9 @@ func showSimpleErrorAlert(_message: String, _sender: AnyObject) {
 
 func openUrlWithSafari(_ urlString: String) {
     let url = URL.init(string: urlString)
-    UIApplication.shared.openURL(url!)    
+    if (url != nil && UIApplication.shared.canOpenURL(url!)) {
+        UIApplication.shared.openURL(url!)
+    }
 }
 
 func getBaseParseParams() -> NSMutableDictionary {

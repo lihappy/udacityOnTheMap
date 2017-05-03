@@ -36,16 +36,23 @@ class OnTheMapViewController: UITabBarController {
     }
     
     func updateData() {
-        let rootVC = self.navigationController?.viewControllers.first as! OnTheMapViewController
+        let rootViewControllers = self.navigationController?.viewControllers
+        var rootVC: OnTheMapViewController
+        if (rootViewControllers != nil && (rootViewControllers?.count)! > 0) {
+            rootVC = rootViewControllers?.first as! OnTheMapViewController
+        } else {
+            return
+        }
         
-        let viewControllers: [UIViewController] = (rootVC.viewControllers)!
-        if (viewControllers.count >= 2) {
-            let listVC = viewControllers[1] as! ListTableViewController
-            listVC.tableView.reloadData()
-            
-            let mapVC = viewControllers[0] as! MapViewController
-            mapVC.updateAnnotations()
-            
+        let tabViewControllers: [UIViewController] = (rootVC.viewControllers)!
+        if (tabViewControllers.count >= 2) {
+            DispatchQueue.main.async {
+                let listVC = tabViewControllers[1] as! ListTableViewController
+                listVC.tableView.reloadData()
+                
+                let mapVC = tabViewControllers[0] as! MapViewController
+                mapVC.updateAnnotations()
+            }
         }
     }
     

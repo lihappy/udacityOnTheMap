@@ -105,35 +105,37 @@ class PostInfoViewController: LHBViewController {
                 return
             }
             
-            // Add annotation
-            self.pointAnnotation = MKPointAnnotation()
-            self.pointAnnotation.title = self.mapString
-            
-            self.longtitute = localSearchResponse!.boundingRegion.center.longitude
-            self.latitude = localSearchResponse?.boundingRegion.center.latitude
-            
-            let coordinate = CLLocationCoordinate2D(latitude: self.latitude!, longitude: self.longtitute!)
-            self.pointAnnotation.coordinate = coordinate
-            
-            self.mapView .addAnnotation(self.pointAnnotation)
-            
-            // Zoom map
-            self.mapView.centerCoordinate = coordinate
-            let span = MKCoordinateSpan.init(latitudeDelta: 5.0, longitudeDelta: 5.0)
-            let region = MKCoordinateRegion.init(center: coordinate, span: span)
-            self.mapView.setRegion(region, animated: true)
-            
-            // Change UI
-            self.topTextView.text = "Enter your link here"
-            self.topTextView.backgroundColor = SIClient.Colors.BlueColor
-            self.topTextView.textColor = UIColor.white
-            
-            self.topTextView.isUserInteractionEnabled = true
-            self.bottomTextView.isHidden = true
-            self.findOnTheMapButton.isHidden = true
-            self.submitButton.isHidden = false
-            self.mapView.isHidden = false
-            
+            DispatchQueue.main.async {
+                // Add annotation
+                self.pointAnnotation = MKPointAnnotation()
+                self.pointAnnotation.title = self.mapString
+                
+                self.longtitute = localSearchResponse!.boundingRegion.center.longitude
+                self.latitude = localSearchResponse?.boundingRegion.center.latitude
+                
+                let coordinate = CLLocationCoordinate2D(latitude: self.latitude!, longitude: self.longtitute!)
+                self.pointAnnotation.coordinate = coordinate
+                
+                self.mapView .addAnnotation(self.pointAnnotation)
+                
+                // Zoom map
+                self.mapView.centerCoordinate = coordinate
+                let span = MKCoordinateSpan.init(latitudeDelta: 5.0, longitudeDelta: 5.0)
+                let region = MKCoordinateRegion.init(center: coordinate, span: span)
+                self.mapView.setRegion(region, animated: true)
+                
+                // Change UI
+                self.topTextView.text = "Enter your link here"
+                self.topTextView.backgroundColor = SIClient.Colors.BlueColor
+                self.topTextView.textColor = UIColor.white
+                
+                self.topTextView.isUserInteractionEnabled = true
+                self.bottomTextView.isHidden = true
+                self.findOnTheMapButton.isHidden = true
+                self.submitButton.isHidden = false
+                self.mapView.isHidden = false
+                
+            }   
         }
         
     }
