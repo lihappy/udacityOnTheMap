@@ -129,6 +129,7 @@ class SIClient: NSObject {
                 showSimpleErrorAlert(_message: postFailed, _sender: sender)
                 return
             }
+            print(result)
             let errorStatus = result?[SIClient.JSONResponseKeys.Error] as? String
             if (errorStatus != nil) {
                 showSimpleErrorAlert(_message: "\(postFailed) \(errorStatus)", _sender: sender)
@@ -254,9 +255,8 @@ class SIClient: NSObject {
         
         let parameters: NSMutableDictionary = getBaseParseParams()
         parameters.setObject("100", forKey: SIClient.JSONResponseKeys.Limit as NSCopying)
-        parameters.setObject("-updatedAt", forKey: SIClient.JSONResponseKeys.Order as NSCopying)
         
-        let url = URL(string: SIClient.Constants.StudentsLocationURL)!
+        let url = URL(string: "\(SIClient.Constants.StudentsLocationURL)?order=-updatedAt")!
         
         let _ = SIClient.sharedInstance().startHttpTask(url, method: SIClient.Constants.GetMethod, parameters: parameters, jsonBody: "", needTrimData: false) { (result, error) in
             
@@ -279,7 +279,7 @@ class SIClient: NSObject {
                 showSimpleErrorAlert(_message: "\(errorMsg) \(errorStatus)", _sender: sender)
                 return
             }
-            
+
             if (result != nil) {
                 sender.saveStudentsInfo(result!)
                 
